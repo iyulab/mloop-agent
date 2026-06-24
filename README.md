@@ -65,7 +65,14 @@ var agent = await MloopAgent.CreateAsync(new MloopAgentOptions
 }, tools);
 
 await foreach (var chunk in agent.RunStreamingAsync("이 데이터로 모델 만들어줘"))
-    Console.Write(chunk.TextDelta);
+{
+    // 청크는 TextDelta(어시스턴트 텍스트) 외에 ToolCallDelta(도구 호출)·ThinkingDelta(추론)도 스트리밍한다.
+    // TextDelta 만 렌더하면 reasoning 모델이 init→train 을 구동하는 동안 화면이 멈춘 듯 보인다 —
+    // 도구 활동까지 표시하려면 델타를 누적해야 한다(NameDelta/ArgumentsDelta → IsComplete).
+    // 참고 구현: CLI 의 AgentStreamRenderer (`🔧 도구호출` · `💭 추론` 가시화).
+    if (chunk.TextDelta is { Length: > 0 } text)
+        Console.Write(text);
+}
 ```
 
 `MloopAgent` 는 단일 `AgentLoop` 를 보유하므로 `RunAsync`/`RunStreamingAsync` 를 반복 호출하면
@@ -74,7 +81,7 @@ await foreach (var chunk in agent.RunStreamingAsync("이 데이터로 모델 만
 ## 마일스톤 범위
 
 - ✅ M1 — 스캐폴딩(SDK + CLI) · ironhive-agent + mloop-mcp 배선 · MLOps 스무고개 프롬프트.
-- ✅ M2(부분) — `.env` 로딩(`--env`) + 엔드포인트 정규화로 **라이브 LLM E2E** 검증(실 도구 구동으로 `init→train` 확인) · 도구 로딩 관측성(ILogger) + 도구 0개 fail-fast. 단위 테스트(20).
+- ✅ M2(대부분) — `.env` 로딩(`--env`) + 엔드포인트 정규화로 **라이브 LLM E2E** 검증(실 도구 구동으로 `init→train` 확인) · 도구 로딩 관측성(ILogger) + 도구 0개 fail-fast · **턴 레벨 관측성**(`AgentStreamRenderer` — 도구 호출·추론 실시간 가시화) · **도구 구동 정확도 실측**(모델이 task·label·dataFile 정확 구동). 단위 테스트(27). 잔여: KAMP 정형 1셋(데이터 hydrate 의존) · 전체 `train→promote` 완주(시간예산).
 - ⏳ M3 — 자율 재학습 상향(trigger 감시 → 재학습 → compare → promote) · 전체 생명주기 자동화.
 
 ## 개발

@@ -54,10 +54,11 @@ while (true)
     var input = Console.ReadLine();
     if (string.IsNullOrWhiteSpace(input)) break;
 
+    var renderer = new AgentStreamRenderer();
     await foreach (var chunk in agent.RunStreamingAsync(input))
     {
-        if (chunk.TextDelta is { Length: > 0 } delta)
-            Console.Write(delta);
+        if (renderer.Render(chunk) is { Length: > 0 } output)
+            Console.Write(output);
     }
     Console.WriteLine();
 }
