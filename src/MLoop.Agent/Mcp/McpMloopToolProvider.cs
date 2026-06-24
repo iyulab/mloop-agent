@@ -33,5 +33,5 @@ public sealed class McpMloopToolProvider(string mcpEntryPath, string? mloopPath 
         return await _manager.GetToolsAsync(cancellationToken);
     }
 
-    public async ValueTask DisposeAsync() => await _manager.DisconnectAllAsync();
+    public async ValueTask DisposeAsync() => await _manager.DisposeAsync();
 }
