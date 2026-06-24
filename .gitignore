@@ -3,3 +3,9 @@ obj/
 *.user
 .vs/
 artifacts/
+
+# Secrets — never commit (this is a public OSS repo). Real endpoints/keys for live
+# integration tests live in the private mloop-umbrella repo, not here.
+.env
+.env.*
+!.env.example

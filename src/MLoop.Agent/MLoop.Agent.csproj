@@ -7,5 +7,9 @@
     <PackageReference Include="IronHive.Agent" />
     <PackageReference Include="Microsoft.Extensions.AI" />
     <PackageReference Include="Microsoft.Extensions.AI.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="MLoop.Agent.Tests" />
   </ItemGroup>
 </Project>

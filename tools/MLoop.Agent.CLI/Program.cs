@@ -1,13 +1,23 @@
+using DotNetEnv;
+using Microsoft.Extensions.Logging;
 using MLoop.Agent;
 using MLoop.Agent.Cli;
 using MLoop.Agent.Mcp;
 
-// 사용법: mloop-agent <projectPath> [--mcp <mcp/build/index.js>] [--mloop <mloop.exe>]
+// 사용법: mloop-agent <projectPath> [--mcp <mcp/build/index.js>] [--mloop <mloop.exe>] [--env <.env>]
 if (args.Length < 1)
 {
-    Console.Error.WriteLine("사용법: mloop-agent <projectPath> [--mcp <index.js>] [--mloop <mloop 실행파일>]");
+    Console.Error.WriteLine("사용법: mloop-agent <projectPath> [--mcp <index.js>] [--mloop <mloop 실행파일>] [--env <.env>]");
     return 1;
 }
+
+// .env 적극 활용: 명시 경로(--env) 우선, 없으면 cwd→상위로 탐색.
+// (실제 엔드포인트/키는 private 레포의 로컬 .env 에 두고 이 공개 CLI 는 값을 모른다.)
+var envPath = GetOption(args, "--env");
+if (!string.IsNullOrWhiteSpace(envPath))
+    Env.Load(envPath);
+else
+    Env.TraversePath().Load();
 
 var projectPath = args[0];
 var mcpEntry = GetOption(args, "--mcp") ?? Environment.GetEnvironmentVariable("MLOOP_MCP_PATH");
@@ -19,8 +29,13 @@ if (string.IsNullOrWhiteSpace(mcpEntry))
     return 1;
 }
 
+using var loggerFactory = LoggerFactory.Create(b => b
+    .SetMinimumLevel(LogLevel.Information)
+    .AddConsole());
+
 using var chatClient = GpuStackChatClientFactory.FromEnvironment();
-await using var toolProvider = new McpMloopToolProvider(mcpEntry, mloopPath);
+await using var toolProvider = new McpMloopToolProvider(
+    mcpEntry, mloopPath, loggerFactory.CreateLogger<McpMloopToolProvider>());
 
 var agent = await MloopAgent.CreateAsync(
     new MloopAgentOptions

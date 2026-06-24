@@ -1,4 +1,5 @@
 using IronHive.Agent.Mcp;
+using Microsoft.Extensions.AI;
 using MLoop.Agent.Mcp;
 using Xunit;
 
@@ -30,5 +31,27 @@ public class McpMloopToolProviderTests
     {
         var config = McpMloopToolProvider.BuildConfig("/x/index.js", null);
         Assert.Null(config.Environment);
+    }
+
+    [Fact]
+    public void EnsureToolsLoaded_throws_when_mcp_exposes_no_tools()
+    {
+        IReadOnlyList<AITool> empty = [];
+
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => McpMloopToolProvider.EnsureToolsLoaded(empty, "/x/mcp/build/index.js"));
+
+        // Message must name the offending entry so the operator can diagnose the silent-empty start.
+        Assert.Contains("/x/mcp/build/index.js", ex.Message);
+    }
+
+    [Fact]
+    public void EnsureToolsLoaded_returns_tools_when_present()
+    {
+        IReadOnlyList<AITool> tools = [AIFunctionFactory.Create(() => "ok", "mloop_info")];
+
+        var result = McpMloopToolProvider.EnsureToolsLoaded(tools, "/x/index.js");
+
+        Assert.Same(tools, result);
     }
 }
