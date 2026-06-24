@@ -11,6 +11,7 @@ public sealed class McpMloopToolProvider(string mcpEntryPath, string? mloopPath 
     : IMloopToolProvider, IAsyncDisposable
 {
     private readonly McpPluginManager _manager = new();
+    private bool _connected;
 
     public static McpPluginConfig BuildConfig(string mcpEntryPath, string? mloopPath) => new()
     {
@@ -24,7 +25,11 @@ public sealed class McpMloopToolProvider(string mcpEntryPath, string? mloopPath 
 
     public async Task<IReadOnlyList<AITool>> GetToolsAsync(CancellationToken cancellationToken = default)
     {
-        await _manager.ConnectAsync("mloop", BuildConfig(mcpEntryPath, mloopPath), cancellationToken);
+        if (!_connected)
+        {
+            await _manager.ConnectAsync("mloop", BuildConfig(mcpEntryPath, mloopPath), cancellationToken);
+            _connected = true;
+        }
         return await _manager.GetToolsAsync(cancellationToken);
     }
 
