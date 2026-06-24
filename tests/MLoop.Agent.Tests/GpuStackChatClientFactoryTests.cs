@@ -3,19 +3,31 @@ using Xunit;
 
 public class GpuStackChatClientFactoryTests
 {
-    [Fact]
-    public void FromEnvironment_throws_clear_error_when_host_missing()
+    [Theory]
+    [InlineData("GPUSTACK_HOST")]
+    [InlineData("GPUSTACK_API_KEY")]
+    [InlineData("GPUSTACK_MODEL")]
+    public void FromEnvironment_throws_clear_error_when_var_missing(string varName)
     {
-        var prev = Environment.GetEnvironmentVariable("GPUSTACK_HOST");
-        Environment.SetEnvironmentVariable("GPUSTACK_HOST", null);
+        var saved = new Dictionary<string, string?>
+        {
+            ["GPUSTACK_HOST"] = Environment.GetEnvironmentVariable("GPUSTACK_HOST"),
+            ["GPUSTACK_API_KEY"] = Environment.GetEnvironmentVariable("GPUSTACK_API_KEY"),
+            ["GPUSTACK_MODEL"] = Environment.GetEnvironmentVariable("GPUSTACK_MODEL"),
+        };
+        Environment.SetEnvironmentVariable("GPUSTACK_HOST", "http://localhost");
+        Environment.SetEnvironmentVariable("GPUSTACK_API_KEY", "key");
+        Environment.SetEnvironmentVariable("GPUSTACK_MODEL", "model");
+        Environment.SetEnvironmentVariable(varName, null);
         try
         {
             var ex = Assert.Throws<InvalidOperationException>(GpuStackChatClientFactory.FromEnvironment);
-            Assert.Contains("GPUSTACK_HOST", ex.Message);
+            Assert.Contains(varName, ex.Message);
         }
         finally
         {
-            Environment.SetEnvironmentVariable("GPUSTACK_HOST", prev);
+            foreach (var (k, v) in saved)
+                Environment.SetEnvironmentVariable(k, v);
         }
     }
 }

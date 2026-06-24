@@ -19,7 +19,7 @@ if (string.IsNullOrWhiteSpace(mcpEntry))
     return 1;
 }
 
-var chatClient = GpuStackChatClientFactory.FromEnvironment();
+using var chatClient = GpuStackChatClientFactory.FromEnvironment();
 await using var toolProvider = new McpMloopToolProvider(mcpEntry, mloopPath);
 
 var agent = await MloopAgent.CreateAsync(
