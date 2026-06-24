@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>MLoop.Agent</PackageId>
+    <Description>AI agent for MLOps with MLoop — conversational model building over mloop-mcp.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="IronHive.Agent" />
+    <PackageReference Include="Microsoft.Extensions.AI" />
+    <PackageReference Include="Microsoft.Extensions.AI.Abstractions" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/MLoop.Agent/MLoop.Agent.csproj" />
+  <Project Path="tools/MLoop.Agent.CLI/MLoop.Agent.CLI.csproj" />
+  <Project Path="tests/MLoop.Agent.Tests/MLoop.Agent.Tests.csproj" />
+</Solution>

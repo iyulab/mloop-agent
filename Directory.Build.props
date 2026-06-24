@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Version>0.1.0</Version>
+    <Authors>iyulab</Authors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- IronHive.Agent 0.2.15 가 전이로 끌어오는 Microsoft.Bcl.Memory 9.0.4 / SQLitePCLRaw 2.1.11
+         이 NU1903(취약점) 경고를 발생시킨다. 이는 upstream 전이 의존성이라 우리 레이어에서
+         고칠 수 없으므로 직접 의존성만 감사하여 TreatWarningsAsErrors 와 충돌하지 않게 한다.
+         (dogfooding 이슈: claudedocs/issues/ISSUE-ironhive-agent-20260624-transitive-vulnerable-deps.md) -->
+    <NuGetAuditMode>direct</NuGetAuditMode>
+  </PropertyGroup>
+</Project>
