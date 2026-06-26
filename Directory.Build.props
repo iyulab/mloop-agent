@@ -7,9 +7,11 @@
     <Version>0.1.0</Version>
     <Authors>iyulab</Authors>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <!-- IronHive.Agent 0.2.15 가 전이로 끌어오는 Microsoft.Bcl.Memory 9.0.4 / SQLitePCLRaw 2.1.11
-         이 NU1903(취약점) 경고를 발생시킨다. 이는 upstream 전이 의존성이라 우리 레이어에서
-         고칠 수 없으므로 직접 의존성만 감사하여 TreatWarningsAsErrors 와 충돌하지 않게 한다.
+    <!-- IronHive.Agent 0.2.16: Microsoft.Bcl.Memory NU1903은 upstream에서 패치본(10.0.8) 직접 핀으로
+         근본 해소됨(CLOSED). 그러나 SQLitePCLRaw.lib.e_sqlite3 2.1.11(CVE-2025-6965)의 NU1903은
+         패치 릴리스(SQLite ≥3.50.2 번들)가 아직 없어 어느 소비자도 버전 상향으로 해결 불가.
+         따라서 직접 의존성만 감사하여 TreatWarningsAsErrors 와 충돌하지 않게 한다 — 이는 "임시 우회"가
+         아니라 SQLitePCLRaw 패치 출시 전까지의 정식 권장 상태(ironhive 에코시스템 전역 동일 대응).
          (dogfooding 이슈: claudedocs/issues/ISSUE-ironhive-agent-20260624-transitive-vulnerable-deps.md) -->
     <NuGetAuditMode>direct</NuGetAuditMode>
   </PropertyGroup>
