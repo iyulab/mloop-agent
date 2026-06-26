@@ -6,9 +6,9 @@ using MLoop.Agent.Prompts;
 namespace MLoop.Agent;
 
 /// <summary>
-/// MLOps agent: wraps IronHive.Agent's <see cref="AgentLoop"/>, injects the MLOps 스무고개
+/// MLOps agent: wraps IronHive.Agent's <see cref="AgentLoop"/>, injects the MLOps 자율 FE 루프
 /// system prompt, and exposes mloop-mcp tools to the LLM. The single <see cref="AgentLoop"/>
-/// instance keeps conversation history across <see cref="RunAsync"/> calls (multi-turn 스무고개).
+/// instance keeps conversation history across <see cref="RunAsync"/> calls (multi-turn).
 /// </summary>
 public sealed class MloopAgent
 {
