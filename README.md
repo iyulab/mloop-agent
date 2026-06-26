@@ -82,7 +82,7 @@ await foreach (var chunk in agent.RunStreamingAsync("이 데이터로 모델 만
 ## 마일스톤 범위
 
 - ✅ M1 — 스캐폴딩(SDK + CLI) · ironhive-agent + mloop-mcp 배선 · MLOps 시스템 프롬프트(초기 스무고개 → **Phase 3에서 자율 FE 루프로 재작성**, `--system-prompt` 로 override 가능).
-- ✅ M2(대부분) — `.env` 로딩(`--env`) + 엔드포인트 정규화로 **라이브 LLM E2E** 검증(실 도구 구동으로 `init→train` 확인) · 도구 로딩 관측성(ILogger) + 도구 0개 fail-fast · **턴 레벨 관측성**(`AgentStreamRenderer` — 도구 호출·추론 실시간 가시화) · **도구 구동 정확도 실측**(모델이 task·label·dataFile 정확 구동). 단위 테스트(27). 잔여: KAMP 정형 1셋(데이터 hydrate 의존) · 전체 `train→promote` 완주(시간예산).
+- ✅ M2(대부분) — `.env` 로딩(`--env`) + 엔드포인트 정규화로 **라이브 LLM E2E** 검증(실 도구 구동으로 `init→train` 확인) · 도구 로딩 관측성(ILogger) + 도구 0개 fail-fast · **턴 레벨 관측성**(`AgentStreamRenderer` — 도구 호출·추론 실시간 가시화) · **도구 구동 정확도 실측**(모델이 task·label·dataFile 정확 구동). 단위 테스트(29, Phase 3 자율 FE 루프 회귀 가드 +2 포함). 잔여: KAMP 정형 1셋(데이터 hydrate 의존) · 전체 `train→promote` 완주(시간예산).
 - ⏳ M3 — 자율 재학습 상향(trigger 감시 → 재학습 → compare → promote) · 전체 생명주기 자동화.
 
 ## 개발
